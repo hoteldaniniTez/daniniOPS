@@ -38,23 +38,23 @@ interface SeedData {
 export const initialData: SeedData = {
     users: [
         {
-            name: 'Arturo Riveros',
-            email: 'arturo@google.com',
-            password: bcryptjs.hashSync('123456', 10),
+            name: 'Arturo Riveros Hdz',
+            email: 'riveros45arturo@gmail.com',
+            password: bcryptjs.hashSync('art2drarivher1.', 10),
             role: Role.admin
         },
-        {
-            name: 'Guadalupe Mundo Melgarejo',
-            email: 'luu@google.com',
-            password: bcryptjs.hashSync('123456', 10),
-            role: Role.recepcionista
-        },
-        {
-            name: 'Miguel Hernández',
-            email: 'miguel@google.com',
-            password: bcryptjs.hashSync('123456', 10),
-            role: Role.auxiliar_admin
-        },
+        // {
+        //     name: 'Guadalupe Mundo Melgarejo',
+        //     email: 'luu@google.com',
+        //     password: bcryptjs.hashSync('123456', 10),
+        //     role: Role.recepcionista
+        // },
+        // {
+        //     name: 'Miguel Hernández',
+        //     email: 'miguel@google.com',
+        //     password: bcryptjs.hashSync('123456', 10),
+        //     role: Role.auxiliar_admin
+        // },
     ],
 
     areas: Object.values(AreaType),
