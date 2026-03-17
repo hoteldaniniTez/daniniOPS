@@ -12,7 +12,7 @@ export default async function AuthLayout({
         redirect('/recepcion/movimientos')
     }
     return (
-        <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white font-sans">
+        <main className="min-h-screen bg-white font-sans">
             {children}
         </main>
     );

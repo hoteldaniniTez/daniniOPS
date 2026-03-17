@@ -218,7 +218,7 @@ export const MonthlyReportView = () => {
                                         <span className="text-[10px] text-zinc-400 uppercase font-bold">Monto facturado no perteneciente al hotel</span>
                                     </div>
                                     <span className="font-mono text-lg font-black text-rose-600">
-                                        - {formatCurrency(reportData.totalesRango.propinas * 0.84)}
+                                        - {formatCurrency(reportData.totalesRango.propinas)}
                                     </span>
                                 </div>
 
@@ -227,7 +227,7 @@ export const MonthlyReportView = () => {
                                     <span className="text-base font-black uppercase tracking-tight text-zinc-900">Utilidad Operativa Real (Ingreso Neto)</span>
                                     <div className="text-right">
                                         <span className="font-mono text-2xl font-black text-emerald-600">
-                                            {formatCurrency(reportData.totalesRango.TOTAL - (reportData.totalesRango.propinas * 0.84))}
+                                            {formatCurrency(reportData.totalesRango.TOTAL - (reportData.totalesRango.propinas))}
                                         </span>
                                         <p className="text-[9px] font-black text-emerald-600/50 uppercase tracking-widest leading-none">Monto libre de propinas</p>
                                     </div>
@@ -240,7 +240,7 @@ export const MonthlyReportView = () => {
                             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500" />
                             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Promedio de Propina</span>
                             <h4 className="text-4xl font-black italic text-emerald-400">
-                                {calcPorcentaje((reportData.totalesRango.propinas * 0.84), reportData.totalesRango.TOTAL)}
+                                {calcPorcentaje((reportData.totalesRango.propinas), reportData.totalesRango.TOTAL)}
                             </h4>
                             <p className="text-[9px] font-bold text-zinc-400 leading-tight">Sobre el volumen total del periodo seleccionado</p>
                         </div>

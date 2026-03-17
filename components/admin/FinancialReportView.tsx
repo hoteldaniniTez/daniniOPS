@@ -309,12 +309,12 @@ export const FinancialReportView = () => {
                                     <div className="flex items-center gap-3">
                                         <ArrowDownCircle size={20} className="text-rose-500 animate-bounce" />
                                         <span className="text-3xl font-mono font-black text-rose-500">
-                                            -{formatCurrency((reportData.totalGeneralPropinas * 0.84))}
+                                            - {formatCurrency((reportData.totalGeneralPropinas))}
                                         </span>
                                     </div>
                                     <div className="inline-flex items-center gap-1.5 py-1 px-3 bg-rose-500/10 border border-rose-500/20 rounded-full mt-2">
                                         <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest">
-                                            Incidencia: {(((reportData.totalGeneralPropinas * 0.84) / reportData.granTotal) * 100).toFixed(1)}%
+                                            Incidencia: {(((reportData.totalGeneralPropinas) / reportData.granTotal) * 100).toFixed(1)}%
                                         </span>
                                     </div>
                                 </div>
@@ -332,7 +332,7 @@ export const FinancialReportView = () => {
                                                 Margen Operativo
                                             </span>
                                             <p className="text-xl font-mono font-black text-emerald-400">
-                                                {(((reportData.granTotal - (reportData.totalGeneralPropinas * 0.84)) / reportData.granTotal) * 100).toFixed(1)}%
+                                                {(((reportData.granTotal - (reportData.totalGeneralPropinas)) / reportData.granTotal) * 100).toFixed(1)}%
                                             </p>
                                         </div>
                                         <div className="h-8 w-px bg-white/10" />
@@ -341,7 +341,7 @@ export const FinancialReportView = () => {
                                                 Margen Propinas
                                             </span>
                                             <p className="text-xl font-mono font-black text-rose-500/70">
-                                                {(((reportData.totalGeneralPropinas * 0.84) / reportData.granTotal) * 100).toFixed(1)}%
+                                                {(((reportData.totalGeneralPropinas) / reportData.granTotal) * 100).toFixed(1)}%
                                             </p>
                                         </div>
                                     </div>
@@ -351,7 +351,7 @@ export const FinancialReportView = () => {
                                         <div className="space-y-1">
                                             <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.2em]">UTILIDAD NETA HOTEL</span>
                                             <h4 className="text-4xl md:text-5xl font-mono font-black text-emerald-400 leading-none">
-                                                {formatCurrency(reportData.granTotal - (reportData.totalGeneralPropinas * 0.84))}
+                                                {formatCurrency(reportData.granTotal - (reportData.totalGeneralPropinas))}
                                             </h4>
                                         </div>
                                         <div className="p-4 bg-emerald-500 rounded-3xl text-zinc-900 shadow-[0_0_30px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform duration-500">

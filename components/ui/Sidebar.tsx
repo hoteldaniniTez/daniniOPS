@@ -46,11 +46,13 @@ export const Sidebar = () => {
             )}
 
             <aside className={`fixed top-0 right-0 h-full w-80 bg-white z-70 transform transition-transform duration-500 ease-in-out border-l border-zinc-100 ${isSidebarOpen ? 'translate-x-0 shadow-2xl' : 'translate-x-full'}`}>
-                <div className="flex flex-col h-full p-8">
-                    <div className="flex justify-between items-center mb-12">
+                {/* Cambiamos p-8 por un padding más estratégico para el scroll */}
+                <div className="flex flex-col h-full">
+
+                    {/* 1. Header: Fijo arriba (agregamos p-8 aquí) */}
+                    <div className="flex justify-between items-center p-8 pb-4 flex-none">
                         <div className="flex flex-col">
                             <span className="font-black tracking-[0.2em] uppercase text-[10px] text-zinc-400">Menú Operativo</span>
-                            {/* 2. Aplicación del mapeo de roles con lógica simplificada */}
                             <span className="text-[9px] font-bold text-emerald-600 uppercase italic">
                                 {isAuthenticated && userRole ? (ROLE_LABELS[userRole] || "Invitado") : "No role"}
                             </span>
@@ -60,20 +62,17 @@ export const Sidebar = () => {
                         </button>
                     </div>
 
-                    <nav className="flex-1 space-y-2">
+                    {/* 2. Navegación: Área con SCROLL (La clave está en overflow-y-auto) */}
+                    <nav className="flex-1 overflow-y-auto px-8 py-4 space-y-2 scrollbar-thin scrollbar-thumb-zinc-200">
                         {navItems.map((link) => {
-                            // 3. Validación de permisos
                             if (!isAuthenticated || !link.roles.includes(userRole as string)) return null;
-
                             const isActive = pathname === link.href;
 
                             return (
                                 <div key={link.href}>
-                                    {/* Separador visual para administración */}
                                     {link.name === 'Reportes' && userRole === 'admin' && (
                                         <div className="w-full h-px bg-zinc-100 my-4" />
                                     )}
-
                                     <Link
                                         href={link.href}
                                         onClick={closeSidebar}
@@ -92,19 +91,18 @@ export const Sidebar = () => {
                         })}
                     </nav>
 
-                    {
-                        isAuthenticated && (
-                            <div className="pt-8 border-t border-zinc-100">
-                                <button
-                                    onClick={onLogout}
-                                    className="cursor-pointer flex items-center gap-4 w-full p-4 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm uppercase tracking-widest"
-                                >
-                                    <LogOut size={20} />
-                                    <span>Cerrar Sesión</span>
-                                </button>
-                            </div>
-                        )
-                    }
+                    {/* 3. Footer: Botón de Cerrar Sesión (Fijo abajo con flex-none) */}
+                    {isAuthenticated && (
+                        <div className="p-8 border-t border-zinc-100 flex-none bg-white">
+                            <button
+                                onClick={onLogout}
+                                className="cursor-pointer flex items-center gap-4 w-full p-4 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm uppercase tracking-widest"
+                            >
+                                <LogOut size={20} />
+                                <span>Cerrar Sesión</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </aside>
         </>
