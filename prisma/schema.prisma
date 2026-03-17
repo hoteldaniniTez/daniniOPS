@@ -1,0 +1,228 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- ENUMS ---
+enum Role {
+  admin
+  recepcionista
+  auxiliar_admin
+}
+
+enum AreaType {
+  HOTEL
+  ANTICIPO_HOTEL
+  RESTAURANTE
+  ANTICIPO_RESTAURANTE
+  EVENTO
+  RENTA_ESPACIOS
+  SOUVENIR
+}
+
+enum MetodoPago {
+  efectivo
+  transferencia
+  tarjeta
+  p_deposito
+  credito_familiar
+  credito_cobrar
+  cortesia_r
+  cortesia_h
+  cupon
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+}
+
+enum TipoFactura {
+  GLOBAL
+  INDIVIDUAL
+}
+
+enum TerminalTipo {
+  T_4303851
+  T_4449999
+}
+
+enum TipoTarjeta {
+  DEBITO
+  CREDITO
+  AMEX
+  INTERNACIONAL
+}
+
+// --- TABLAS DE NÚCLEO ---
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(recepcionista)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  movimientos Movimiento[]
+
+  pagos    Pago[]    @relation("UsuarioQueCobra")
+  facturas Factura[]
+}
+
+model Movimiento {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  area          AreaType
+  referencia    String   @unique
+  montoNeto     Decimal  @db.Decimal(10, 2)
+  pagado        Boolean  @default(false)
+  nombreCliente String?
+  descripcion   String?
+  pagos         Pago[]
+
+  usuarioId          String
+  usuario            User                @relation(fields: [usuarioId], references: [id])
+  detalleHotel       DetalleHotel?
+  detalleRestaurante DetalleRestaurante?
+  detalleEvento      DetalleEvento?
+  detalleSouvenir    DetalleSouvenir?
+
+  @@index([createdAt])
+  @@index([area])
+  @@index([pagado])
+}
+
+model Factura {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now()) @db.Timestamptz(6)
+  folio     String      @unique
+  tipo      TipoFactura
+  area      AreaType // Para saber si aplica 3% hotelero o solo IVA
+
+  // Totales calculados para el reporte
+  subtotal Decimal @db.Decimal(10, 2)
+  iva      Decimal @db.Decimal(10, 2)
+  ish      Decimal @default(0) @db.Decimal(10, 2) // El 3% hotelero
+  total    Decimal @db.Decimal(10, 2)
+
+  // Relación: Una factura puede cubrir varios movimientos (Global)
+  // O un solo movimiento (Individual)
+  detallesPago FacturaDetallePago[]
+
+  // Auditoría: Quién generó la factura (el recepcionista de la noche)
+  usuarioId String
+  usuario   User   @relation(fields: [usuarioId], references: [id])
+
+  @@index([createdAt])
+  @@index([area])
+}
+
+model Pago {
+  id String @id @default(cuid())
+
+  fechaPago       DateTime      @default(now()) @db.Timestamptz(6)
+  monto           Decimal       @db.Decimal(10, 2)
+  metodo          MetodoPago
+  numTerminal     TerminalTipo?
+  tipoTarjeta     TipoTarjeta?
+  propina         Decimal       @default(0) @db.Decimal(10, 2) // Propina de este pago específico
+  requiereFactura Boolean       @default(false)
+  facturado       Boolean       @default(false)
+  nombreFactura   String?
+  referencia      String?
+
+  movimientoId       String
+  movimiento         Movimiento           @relation(fields: [movimientoId], references: [id], onDelete: Cascade)
+  cajeroId           String
+  cajero             User                 @relation("UsuarioQueCobra", fields: [cajeroId], references: [id])
+  facturasVinculadas FacturaDetallePago[]
+
+  @@index([cajeroId])
+  @@index([fechaPago])
+  @@index([metodo])
+  @@index([requiereFactura, facturado])
+}
+
+model FacturaDetallePago {
+  id        String  @id @default(cuid())
+  facturaId String
+  pagoId    String
+  monto     Decimal @db.Decimal(10, 2)
+
+  factura Factura @relation(fields: [facturaId], references: [id], onDelete: Cascade)
+  pago    Pago    @relation(fields: [pagoId], references: [id], onDelete: Cascade)
+
+  @@unique([facturaId, pagoId])
+}
+
+// --- TABLAS DE DETALLE (1:1) ---
+model DetalleHotel {
+  id           String     @id @default(cuid())
+  habitaciones String
+  movimientoId String     @unique
+  movimiento   Movimiento @relation(fields: [movimientoId], references: [id], onDelete: Cascade)
+}
+
+model DetalleRestaurante {
+  id           String     @id @default(cuid())
+  comensales   Int
+  mesa         String
+  mesero       String
+  movimientoId String     @unique
+  movimiento   Movimiento @relation(fields: [movimientoId], references: [id], onDelete: Cascade)
+}
+
+model DetalleEvento {
+  id           String     @id @default(cuid())
+  areaRentada  String
+  tipoEvento   String
+  movimientoId String     @unique
+  movimiento   Movimiento @relation(fields: [movimientoId], references: [id], onDelete: Cascade)
+}
+
+model DetalleSouvenir {
+  id           String     @id @default(cuid())
+  nombre       String
+  movimientoId String     @unique
+  movimiento   Movimiento @relation(fields: [movimientoId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  // Quién realizó la acción
+  usuarioId     String
+  usuarioNombre String // Guardamos el nombre por si el usuario se elimina después
+
+  // Qué acción se realizó
+  accion AuditAction
+
+  // En qué tabla y qué registro (ID)
+  entityName String // "Movimiento", "User", "Pago"
+  entityId   String
+
+  // El "Por qué" (tu requerimiento principal)
+  motivo String? @db.Text
+
+  // Datos técnicos opcionales para ver qué cambió exactamente
+  oldValues Json? // Estado anterior del registro
+  newValues Json? // Estado nuevo del registro
+
+  @@index([entityName, entityId])
+  @@index([usuarioId])
+}
