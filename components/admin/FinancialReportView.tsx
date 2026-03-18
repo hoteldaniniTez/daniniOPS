@@ -52,7 +52,7 @@ export const FinancialReportView = () => {
     const defaultAreaStyle = "text-orange-600 border-t-orange-600 group-hover:bg-orange-50";
 
     return (
-        <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 bg-zinc-50/50 min-h-screen pb-24 md:pb-8">
+        <div className="w-full max-w-none mx-auto p-4 md:p-6 lg:px-12 lg:py-8 space-y-6 md:space-y-8 bg-zinc-50/50 min-h-screen pb-24 md:pb-8">
 
             {/* 1. HEADER & FILTROS */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-6">
@@ -140,7 +140,7 @@ export const FinancialReportView = () => {
                         <div className="p-5 md:p-6 bg-zinc-900 text-white border-b border-white/10 flex justify-between items-center">
                             <h3 className="font-black uppercase italic text-sm tracking-widest flex items-center gap-3">
                                 <BarChart3 size={20} className="text-emerald-400" />
-                                Resumen De Ingresos
+                                Resumen De Ingresos {range.inicio != range.fin ? `${range.inicio} - ${range.fin}` : `${range.inicio}`}
                             </h3>
 
                             {/* Aquí tienes el espacio libre a la derecha por si en el futuro quieres poner un botón de "Exportar a Excel" o algo similar */}
@@ -149,16 +149,16 @@ export const FinancialReportView = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse whitespace-nowrap">
                                 <thead>
-                                    <tr className="bg-white border-b border-zinc-200 text-zinc-900 text-[12px] lg:text-[10px] font-black uppercase tracking-widest">
-                                        <th className="p-5 pl-6 sticky left-0 bg-white z-10 border-r border-zinc-100 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">Departamento</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">Efectivo</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">P/Depósito</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">Transf.</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">T-4303851</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">T-4449999</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">Cort. H</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">Cort. R</th>
-                                        <th className="p-5 text-right border-r border-zinc-100">Cred. F</th>
+                                    <tr className="bg-white border-b border-zinc-200 text-zinc-900 text-xs font-black uppercase tracking-widest">
+                                        <th className="p-2 pl-6 sticky left-0 bg-white z-10 border-r border-zinc-100 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">Departamento</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">Efectivo</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">P/Depósito</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">Transf.</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">T-4303851</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">T-4449999</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">Cort. H</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">Cort. R</th>
+                                        <th className="p-2 text-right border-r border-zinc-100">Cred. F</th>
 
                                         <th className="p-5 pr-6 text-right bg-zinc-100 text-zinc-900">Total Depto.</th>
                                     </tr>
@@ -172,68 +172,68 @@ export const FinancialReportView = () => {
                                                 className={clsx(
                                                     // Le quitamos el "flex items-center gap-3" al td
                                                     // Mantenemos el padding, el sticky y los bordes aquí
-                                                    "bg-white p-4 pl-6 left-0 sticky transition-colors z-10 border-r border-zinc-100 border-t-4 align-middle",
+                                                    "bg-white p-2 pl-6 left-0 sticky transition-colors z-10 border-r border-zinc-100 border-t-4 align-middle",
                                                     areaStyles[area] || defaultAreaStyle
                                                 )}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-2.5 h-2.5 rounded-full bg-zinc-300 group-hover:bg-emerald-500 group-hover:scale-125 transition-all" />
-                                                    <p className="font-mono text-sm font-bold">{area.replace('_', ' ')}</p>
+                                                    <p className="font-mono text-xs font-bold">{area.replace('ANTICIPO_', 'ANT ')}</p>
                                                 </div>
                                             </td>
 
                                             {/* 🟢 Columnas con fondo sutil y texto oscuro alineado a la derecha */}
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.efectivo)}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.p_deposito)}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.transferencia)}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.tarjeta.terminal["T_4303851"])}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.tarjeta.terminal["T_4449999"])}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.cortesia_h)}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.cortesia_r)}</p>
                                             </td>
                                             <td className={clsx(
-                                                "p-4 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
+                                                "p-2 text-right border-t-4 border-r border-zinc-100 text-zinc-500",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-sm font-medium">{formatCurrency(valores.credito_familiar)}</p>
                                             </td>
 
                                             <td className={clsx(
-                                                "bg-zinc-100 p-4 text-right border-t-4 border-r border-zinc-100",
+                                                "bg-zinc-100 p-2 text-right border-t-4 border-r border-zinc-100",
                                                 areaStyles[area] || defaultAreaStyle
                                             )}>
                                                 <p className="font-mono text-base font-black">{formatCurrency(valores.TOTAL)}</p>
@@ -251,17 +251,17 @@ export const FinancialReportView = () => {
                                         </td>
 
                                         {/* Celdas de Totales (Limpias, sin clases redundantes) */}
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.efectivo)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.p_deposito)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.transferencia)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.T_4303851)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.T_4449999)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.cortesia_h)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.cortesia_r)}</td>
-                                        <td className="p-5 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.credito_familiar)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.efectivo)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.p_deposito)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.transferencia)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.T_4303851)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200">{formatCurrency(reportData.totalesPorMetodo.T_4449999)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.cortesia_h)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.cortesia_r)}</td>
+                                        <td className="p-2 text-right font-mono border-r border-t-2 border-zinc-200 text-zinc-500">{formatCurrency(reportData.totalesPorMetodo.credito_familiar)}</td>
 
                                         {/* 🟢 Tu excelente idea del bloque verde, pero mejor integrada */}
-                                        <td className="p-5 pr-6 text-right font-black font-mono bg-emerald-600 text-white text-base border-t-2 border-emerald-600">
+                                        <td className="p-2 pr-6 text-right font-black font-mono bg-emerald-600 text-white text-base border-t-2 border-emerald-600">
                                             {formatCurrency(reportData.granTotal)}
                                         </td>
                                     </tr>
@@ -371,7 +371,7 @@ export const FinancialReportView = () => {
                         </div>
                         <div className="p-5 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8 md:gap-10">
                             <FacturaTable title="Ingresos Generales (16%)" facturas={reportData.facturasDetalle.filter((f: any) => f.ish === 0)} />
-                            <FacturaTable title="Ingresos Hospedaje (3%)" facturas={reportData.facturasDetalle.filter((f: any) => f.ish > 0)} hotel={true} />
+                            <FacturaTable title="Ingresos Hospedaje (16% + 3%)" facturas={reportData.facturasDetalle.filter((f: any) => f.ish > 0)} hotel={true} />
                         </div>
                     </div>
 
@@ -459,11 +459,11 @@ const FacturaTable = ({ title, facturas, hotel }: any) => {
                     <table className="w-full text-xs md:text-sm font-bold uppercase min-w-125">
                         <thead>
                             <tr className="text-zinc-400 bg-zinc-50 border-b border-zinc-200">
-                                <th className="sticky bg-zinc-50 p-4 md:p-5 text-center left-0">Folio SAT</th>
-                                <th className="p-4 md:p-5 text-center">Subtotal</th>
-                                <th className="p-4 md:p-5 text-center text-blue-700">IVA</th>
-                                {hotel && <th className="p-4 md:p-5 text-center text-purple-600">ISH</th>}
-                                <th className="p-4 md:p-5 text-center text-emerald-700">Total</th>
+                                <th className="sticky bg-zinc-50 p-2 md:p-3 text-center left-0">Folio SAT</th>
+                                <th className="p-2 md:p-3 text-center">Subtotal</th>
+                                <th className="p-2 md:p-3 text-center text-blue-700">IVA</th>
+                                {hotel && <th className="p-2 md:p-3 text-center text-purple-600">ISH</th>}
+                                <th className="p-2 md:p-3 text-center text-emerald-700">Total</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-100 text-sm">
@@ -476,7 +476,7 @@ const FacturaTable = ({ title, facturas, hotel }: any) => {
                                         <td className="p-4 md:p-5 text-right font-mono">{formatCurrency(f.subtotal)}</td>
                                         <td className="p-4 md:p-5 text-right font-mono text-blue-700">{formatCurrency(f.iva)}</td>
                                         {hotel && <td className="p-4 md:p-5 text-right font-mono text-purple-600">{formatCurrency(f.ish)}</td>}
-                                        <td className="p-4 md:p-5 text-right font-black text-emerald-600 text-base">{formatCurrency(f.total)}</td>
+                                        <td className="p-4 md:p-5 text-right text-emerald-600 text-base">{formatCurrency(f.total)}</td>
                                     </tr>
                                 ))
                             )}
@@ -484,11 +484,11 @@ const FacturaTable = ({ title, facturas, hotel }: any) => {
                         {facturas.length > 0 && (
                             <tfoot>
                                 <tr className="border-t-2 border-zinc-300 text-zinc-900 bg-zinc-100/50 text-sm">
-                                    <td className="sticky left-0 bg-zinc-50 p-4 md:p-5 font-black">TOTAL</td>
-                                    <td className="p-4 md:p-5 text-right font-mono font-black">{formatCurrency(totalSub)}</td>
-                                    <td className="p-4 md:p-5 text-right font-mono font-black text-blue-700">{formatCurrency(totalIva)}</td>
+                                    <td className="sticky left-0 bg-zinc-50 p-2 md:p-3 font-black">TOTAL</td>
+                                    <td className="p-2 md:p-3 text-right font-mono font-black">{formatCurrency(totalSub)}</td>
+                                    <td className="p-2 md:p-3 text-right font-mono font-black text-blue-700">{formatCurrency(totalIva)}</td>
                                     {hotel && <td className="p-4 md:p-5 text-right font-mono font-black text-purple-700">{formatCurrency(totalIsh)}</td>}
-                                    <td className="p-4 md:p-5 text-right font-mono font-black text-emerald-700 text-base">{formatCurrency(totalGen)}</td>
+                                    <td className="p-2 md:p-3 text-right text-emerald-700 text-base">{formatCurrency(totalGen)}</td>
                                 </tr>
                             </tfoot>
                         )}

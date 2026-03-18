@@ -19,7 +19,7 @@ export default async function DashboardLayout({
             <Sidebar />
             <ScreenshotButton />
 
-            <div id="main-content" className="pt-20 lg:pt-24 px-4 sm:px-8 lg:px-16">
+            <div id="main-content" className="pt-20 lg:pt-24 px-2 sm:px-6 lg:px-2">
                 {children}
                 <Toaster position="top-right" richColors closeButton />
             </div>
