@@ -10,52 +10,49 @@ const ORDEN_PRIORIDAD: Record<string, number> = {
     'ANTICIPO_RESTAURANTE': 4, 'EVENTO': 5, 'RENTA_ESPACIOS': 6, 'SOUVENIR': 7
 };
 
-export const getMovementsbyUser = async (turno: TipoTurno = 'dia') => {
+export const getMovementsbyUser = async () => {
     const session = await auth();
     if (!session?.user?.id) {
         return { ok: false, movements: [], message: "No autorizado o sin sesión activa" };
     }
 
     const userId = session.user.id;
+    const timeZone = "America/Mexico_City";
 
     try {
-        // 🟢 CORRECCIÓN: Usar toLocaleDateString para obtener solo "YYYY-MM-DD" limpio
-        const ahoraMexicoStr = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+        const ahora = new Date();
 
-        const horaActualMexicoStr = new Date().toLocaleTimeString("en-US", { timeZone: "America/Mexico_City", hour12: false });
-        const horaActualInt = parseInt(horaActualMexicoStr.split(':')[0], 10);
+        // 1. Obtenemos solo la hora en formato CDMX para evaluar si pasaron las 7 AM
+        const horaActualStr = ahora.toLocaleTimeString("en-US", { timeZone, hour12: false });
+        const horaActualInt = parseInt(horaActualStr.split(':')[0], 10);
 
-        let inicioTurno = new Date(`${ahoraMexicoStr}T00:00:00.000-06:00`);
-        let finTurno = new Date(`${ahoraMexicoStr}T00:00:00.000-06:00`);
+        // 2. Función blindada para obtener YYYY-MM-DD sin importar el UTC del servidor
+        const getDateString = (daysOffset: number) => {
+            const date = new Date(ahora);
+            // Sumamos o restamos 24 horas en milisegundos
+            date.setTime(date.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+            return date.toLocaleDateString("en-CA", { timeZone });
+        };
 
-        if (turno === 'dia') {
-            inicioTurno = new Date(`${ahoraMexicoStr}T07:00:00.000-06:00`);
-            finTurno = new Date(`${ahoraMexicoStr}T15:00:00.000-06:00`);
+        let inicioTurno: Date;
+        let finTurno: Date;
 
-        } else if (turno === 'tarde') {
-            inicioTurno = new Date(`${ahoraMexicoStr}T15:00:00.000-06:00`);
-            finTurno = new Date(`${ahoraMexicoStr}T23:00:00.000-06:00`);
+        // 3. Lógica de Día Hotelero
+        if (horaActualInt >= 7) {
+            // Día normal: de HOY a las 7:00 AM hasta MAÑANA a las 7:00 AM
+            const hoyStr = getDateString(0);
+            const mananaStr = getDateString(1);
 
-        } else if (turno === 'noche') {
-            if (horaActualInt < 7) {
-                // Estamos en la madrugada. El turno empezó ayer.
-                const ayer = new Date(inicioTurno);
-                ayer.setDate(ayer.getDate() - 1);
-                // 🟢 CORRECCIÓN: Usar toLocaleDateString
-                const ayerStr = ayer.toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+            // Usamos -06:00 fijo porque México ya no tiene horario de verano
+            inicioTurno = new Date(`${hoyStr}T07:00:00.000-06:00`);
+            finTurno = new Date(`${mananaStr}T07:00:00.000-06:00`);
+        } else {
+            // Madrugada: El día hotelero empezó AYER a las 7:00 AM y termina HOY a las 7:00 AM
+            const ayerStr = getDateString(-1);
+            const hoyStr = getDateString(0);
 
-                inicioTurno = new Date(`${ayerStr}T23:00:00.000-06:00`);
-                finTurno = new Date(`${ahoraMexicoStr}T07:00:00.000-06:00`);
-            } else {
-                // Estamos en la noche. El turno empezó hoy y terminará "mañana".
-                const manana = new Date(inicioTurno);
-                manana.setDate(manana.getDate() + 1);
-                // 🟢 CORRECCIÓN: Usar toLocaleDateString
-                const mananaStr = manana.toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
-
-                inicioTurno = new Date(`${ahoraMexicoStr}T23:00:00.000-06:00`);
-                finTurno = new Date(`${mananaStr}T07:00:00.000-06:00`);
-            }
+            inicioTurno = new Date(`${ayerStr}T07:00:00.000-06:00`);
+            finTurno = new Date(`${hoyStr}T07:00:00.000-06:00`);
         }
 
         // 3. CONSULTA A BASE DE DATOS

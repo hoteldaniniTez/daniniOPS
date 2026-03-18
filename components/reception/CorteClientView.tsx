@@ -144,8 +144,8 @@ export const CorteClientView = ({ initialMovements, initialTurno }: Props) => {
     const handleTurnoChange = async (nuevoTurno: 'dia' | 'tarde' | 'noche') => {
         setLoading(true);
         setTurno(nuevoTurno);
-        const res = await getMovementsbyUser(nuevoTurno);
-        if (res.movements) setMovements(res.movements as any);
+        // const res = await getMovementsbyUser(nuevoTurno);
+        // if (res.movements) setMovements(res.movements as any);
         setLoading(false);
     };
 
