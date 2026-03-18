@@ -16,7 +16,7 @@ export const getDailyCorteMovements = async (fechaInicioStr: string, fechaFinStr
         return { ok: false, movements: [], message: "No autorizado o sin sesión activa" };
     }
 
-    const rolesPermitidos = ["admin", "auxiliar_admin"];
+    const rolesPermitidos = ["admin", "auxiliar_admin", "recepcionista"];
     if (!rolesPermitidos.includes(session.user.role)) {
         return { ok: false, movements: [], message: "El usuario debe estar autenticado como administrador o auxiliar" };
     }

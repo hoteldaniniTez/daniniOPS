@@ -6,8 +6,8 @@ import { redirect } from 'next/navigation';
 export default async function ReportesPage() {
     const session = await auth();
 
-    const rolesPermitidos = ["admin", "auxiliar_admin"];
-    if (!session?.user?.role || !rolesPermitidos.includes(session.user.role)) {
+    const rol = session?.user.role;
+    if (!session?.user || !session?.user.active) {
         redirect("/recepcion/movimientos");
     }
 
@@ -49,36 +49,43 @@ export default async function ReportesPage() {
                 </Link>
 
                 {/* TARJETA 2: REPORTE MENSUAL */}
-                <Link href="/admin/reportes/mensual" className="group block">
-                    <div className="bg-white p-8 rounded-4xl border-2 border-zinc-100 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                        <div className="p-4 bg-zinc-50 rounded-2xl w-fit text-zinc-900 mb-6 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                            <BarChart3 size={28} />
-                        </div>
-                        <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wide mb-2">Reportes Mensuales</h3>
-                        <p className="text-xs text-zinc-500 font-medium leading-relaxed mb-8 flex-1">
-                            Comparativa general de ingresos, rentabilidad neta por area y/o suma total de areas.
-                        </p>
-                        <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-blue-600 transition-colors">
-                            Acceder al módulo <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
-                        </div>
-                    </div>
-                </Link>
+                {
+                    rol != "recepcionista" && (
+                        <>
+                            <Link href="/admin/reportes/mensual" className="group block">
+                                <div className="bg-white p-8 rounded-4xl border-2 border-zinc-100 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+                                    <div className="p-4 bg-zinc-50 rounded-2xl w-fit text-zinc-900 mb-6 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                                        <BarChart3 size={28} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wide mb-2">Reportes Mensuales</h3>
+                                    <p className="text-xs text-zinc-500 font-medium leading-relaxed mb-8 flex-1">
+                                        Comparativa general de ingresos, rentabilidad neta por area y/o suma total de areas.
+                                    </p>
+                                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-blue-600 transition-colors">
+                                        Acceder al módulo <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
+                                    </div>
+                                </div>
+                            </Link>
 
-                {/* TARJETA 3: FACTURACIÓN / CFDI (Opcional para el futuro) */}
-                <Link href="/admin/reportes/financiero" className="group block">
-                    <div className="bg-white p-8 rounded-4xl border-2 border-zinc-100 shadow-sm hover:shadow-xl hover:border-purple-500/30 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                        <div className="p-4 bg-zinc-50 rounded-2xl w-fit text-zinc-900 mb-6 group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">
-                            <FileText size={28} />
-                        </div>
-                        <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wide mb-2">Reporte Financiero</h3>
-                        <p className="text-xs text-zinc-500 font-medium leading-relaxed mb-8 flex-1">
-                            Resumen impositivo, desglose de I.V.A., I.S.H. y conciliación directa con los comprobantes emitidos.
-                        </p>
-                        <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-purple-600 transition-colors">
-                            Acceder al módulo <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
-                        </div>
-                    </div>
-                </Link>
+                            {/* TARJETA 3: FACTURACIÓN / CFDI (Opcional para el futuro) */}
+                            <Link href="/admin/reportes/financiero" className="group block">
+                                <div className="bg-white p-8 rounded-4xl border-2 border-zinc-100 shadow-sm hover:shadow-xl hover:border-purple-500/30 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+                                    <div className="p-4 bg-zinc-50 rounded-2xl w-fit text-zinc-900 mb-6 group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">
+                                        <FileText size={28} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wide mb-2">Reporte Financiero</h3>
+                                    <p className="text-xs text-zinc-500 font-medium leading-relaxed mb-8 flex-1">
+                                        Resumen impositivo, desglose de I.V.A., I.S.H. y conciliación directa con los comprobantes emitidos.
+                                    </p>
+                                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-purple-600 transition-colors">
+                                        Acceder al módulo <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
+                                    </div>
+                                </div>
+                            </Link>
+                        </>
+                    )
+                }
+
 
             </div>
         </div>

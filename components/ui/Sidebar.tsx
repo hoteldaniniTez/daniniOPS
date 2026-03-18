@@ -28,7 +28,7 @@ export const Sidebar = () => {
         { name: 'Corte', href: '/recepcion/corte', icon: Calculator, roles: ['admin', 'recepcionista', 'auxiliar_admin'] },
         { name: 'Créditos por Cobrar', href: '/recepcion/creditos-por-cobrar', icon: CreditCard, roles: ['admin', 'recepcionista', 'auxiliar_admin'] },
         { name: 'Facturas', href: '/recepcion/facturas', icon: File, roles: ['admin', 'recepcionista', 'auxiliar_admin'] },
-        { name: 'Reportes', href: '/admin/reportes', icon: LayoutDashboard, roles: ['admin', 'auxiliar_admin'] },
+        { name: 'Reportes', href: '/admin/reportes', icon: LayoutDashboard, roles: ['admin', 'auxiliar_admin', 'recepcionista'] },
         { name: 'Propinas', href: '/admin/propinas', icon: Banknote, roles: ['admin', 'auxiliar_admin'] },
         { name: 'Auditoría', href: '/admin/auditoria', icon: FileText, roles: ['admin'] },
         { name: 'Usuarios', href: '/admin/usuarios', icon: Users, roles: ['admin'] },

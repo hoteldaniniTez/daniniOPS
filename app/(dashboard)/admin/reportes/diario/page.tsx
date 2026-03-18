@@ -7,8 +7,8 @@ import { redirect } from "next/navigation";
 export default async function ReporteDiarioPage() {
     const session = await auth();
 
-    const rolesPermitidos = ["admin", "auxiliar_admin"];
-    if (!session?.user?.role || !rolesPermitidos.includes(session.user.role)) {
+    // const rolesPermitidos = ["admin", "auxiliar_admin", "recepcionista"];
+    if (!session?.user || !session?.user.active) {
         redirect("/recepcion/movimientos");
     }
 
